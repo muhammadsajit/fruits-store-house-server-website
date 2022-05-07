@@ -2,7 +2,7 @@ const express =require('express');
 const app = express();
 const cors =require('cors');
 const port = process.env.PORT ||5000;
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 require('dotenv').config()
 
 //use middleware
@@ -23,6 +23,12 @@ async function run(){
             const items = await cursor.toArray();
             res.send(items)
           });
+          app.get('/inventory/:id',async(req,res)=>{
+             const id=req.params.id ;
+             const query={_id:ObjectId(id)};
+             const inventory = await fruitsCollection.findOne(query);
+             res.send(inventory);
+          })
 
 
 
