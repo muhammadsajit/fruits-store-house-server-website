@@ -29,6 +29,34 @@ async function run(){
              const inventory = await fruitsCollection.findOne(query);
              res.send(inventory);
           })
+        //   update operation
+          app.put('/inventory/:id',async(req,res)=>{
+              console.log(req.params.id)
+              const id=req.params.id;
+              console.log(id)
+              const newQuantity =req.body;
+              console.log(newQuantity)
+              
+              const filter={_id:ObjectId(id)};
+              const options = { upsert: true };
+              const updateDoc={
+                  $set:{
+                      quantity:newQuantity.quantity
+                  }
+              };
+              const result=await fruitsCollection.updateOne(filter,updateDoc,options);
+              res.send(result)
+
+          });
+          //post
+          app.post('/item',async(req,res)=>{
+              const newItem=req.body;
+              const result= await fruitsCollection.insertOne(newItem);
+              res.send(result)
+
+          })
+
+
 
 
 
