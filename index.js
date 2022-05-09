@@ -28,7 +28,18 @@ async function run(){
              const query={_id:ObjectId(id)};
              const inventory = await fruitsCollection.findOne(query);
              res.send(inventory);
-          })
+          });
+          //my order Item
+
+           app.get('/myItem',async(req,res)=>{
+            const query ={};
+            const cursor = fruitsCollection.find(query);
+            const myItems = await cursor.toArray();
+            res.send(myItems)
+               
+           })
+
+
         //   update operation
           app.put('/inventory/:id',async(req,res)=>{
               console.log(req.params.id)
@@ -42,6 +53,24 @@ async function run(){
               const updateDoc={
                   $set:{
                       quantity:newQuantity.quantity
+                  }
+              };
+              const result=await fruitsCollection.updateOne(filter,updateDoc,options);
+              res.send(result)
+
+          });
+          app.put('/inventory/:id',async(req,res)=>{
+              console.log(req.params.id)
+              const id=req.params.id;
+              console.log(id)
+              const updateQuantity =req.body;
+              console.log(updateQuantity)
+              
+              const filter={_id:ObjectId(id)};
+              const options = { upsert: true };
+              const updateDoc={
+                  $set:{
+                      quantity:updateQuantity.quantity
                   }
               };
               const result=await fruitsCollection.updateOne(filter,updateDoc,options);
@@ -81,11 +110,7 @@ app.get('/',(req,res)=>{
     res.send('Running server')
 });
 
-//dbuser
-//XCSHm#8pcXu6cPs
-//uz7NldACI5xqNHzF
-//dbuser1
-//6rryXzJHRUSKQqUk
+
 app.listen(port,()=>{
     console.log('listening to port',port)
 })
